@@ -1,9 +1,6 @@
-// Copy this file to firebase-config.js (same folder) and fill in the values
-// from Firebase Console -> Project settings -> General -> Your apps -> Web app
-// -> SDK setup and configuration -> Config.
-//
-// firebase-config.js is gitignored on purpose -- these are project-specific
-// values, not something to keep committed to source control by default.
+// Real values for the photoscout-c54e7 Firebase project. This file is
+// committed as-is (not a secret -- see README's "Session fee payment" and
+// project-setup sections for why).
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDwLmH0ff-nW4hD5S6nWam9ULUea6svq2c",

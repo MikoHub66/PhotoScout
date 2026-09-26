@@ -1,8 +1,6 @@
-// Copy this file to firebase-config.js (same folder) and paste in the same
-// values used for web/public/shared/firebase-config.js -- it's the same
-// Firebase project, just referenced from the mobile app's own www/ folder.
-//
-// firebase-config.js is gitignored on purpose.
+// Real values for the photoscout-c54e7 Firebase project -- same project as
+// web/public/shared/firebase-config.js, just referenced from the mobile
+// app's own www/ folder. Not a secret; committed as-is.
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDwLmH0ff-nW4hD5S6nWam9ULUea6svq2c",
