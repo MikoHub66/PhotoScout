@@ -440,8 +440,10 @@ textarea {
 }
 
 .leaflet-popup-content a.nav-btn {
-  display: block;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   text-decoration: none;
   margin-top: 8px;
 }
