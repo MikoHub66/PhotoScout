@@ -231,7 +231,7 @@ function renderSidebar() {
         <div class="notes">${escapeHtml(site.notes || "")}</div>
         <label class="pick">
           <input type="checkbox">
-          I want a shot here
+          I want a photo here
         </label>
       </div>
     `;
