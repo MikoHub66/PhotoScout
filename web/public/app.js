@@ -33,6 +33,7 @@ const siteListEl = document.getElementById("siteList");
 const selectionCountEl = document.getElementById("selectionCount");
 const scheduleBtn = document.getElementById("scheduleBtn");
 const venmoBtn = document.getElementById("venmoBtn");
+const paymentCaptionEl = document.getElementById("paymentCaption");
 const clientNameInput = document.getElementById("clientName");
 const clientPhoneInput = document.getElementById("clientPhone");
 const dateInput = document.getElementById("shootDate");
@@ -319,7 +320,10 @@ function buildVenmoLink() {
   return `https://venmo.com/u/${encodeURIComponent(VENMO_USERNAME)}?${params.toString()}`;
 }
 
-scheduleBtn.textContent = `Pay ${SESSION_FEE_LABEL} Session Fee and Schedule My Shoot`;
+// Matches the static fallback text already in index.html (so there's no
+// visible flash on load) unless SESSION_FEE_LABEL has actually changed.
+scheduleBtn.textContent = `Step 1: Schedule My ${SESSION_FEE_LABEL} Shoot Session`;
+paymentCaptionEl.textContent = `You can pay the ${SESSION_FEE_LABEL} session fee now or anytime before your shoot.`;
 
 scheduleBtn.addEventListener("click", () => {
   window.location.href = isMobileDevice() ? buildSmsLink() : buildMailtoLink();
