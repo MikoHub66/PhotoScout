@@ -112,6 +112,7 @@ function popupHtmlFor(site) {
       <div style="font-weight:700;margin-bottom:4px;">${escapeHtml(site.title)}</div>
       ${site.notes ? `<div style="font-size:12px;color:#555;margin-bottom:6px;">${escapeHtml(site.notes)}</div>` : ""}
       ${links ? `<div class="popup-links">${links}</div>` : ""}
+      <a class="big-btn nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lng}" target="_blank" rel="noopener">Navigate Now</a>
     </div>
   `;
 }
