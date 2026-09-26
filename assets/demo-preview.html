@@ -38,6 +38,7 @@
   .status-line.err { background:#fdeaea; border:1px solid #f2c4c4; color:#a71d1d; }
   .hidden { display:none !important; }
   .big-btn { padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#fff; font-size:13px; font-weight:600; cursor:pointer; }
+  .big-btn.secondary { background:#eef2f6; color:var(--text); border:1px solid var(--border); }
   .leaflet-popup-content img.popup-photo { width:252px; max-height:252px; object-fit:cover; border-radius:6px; display:block; margin-bottom:6px; }
   .popup-links a { display:block; font-size:12px; color:var(--accent); text-decoration:none; margin-top:2px; }
   #suggestBar { flex:0 0 auto; padding:10px 12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:4px; }
@@ -99,8 +100,9 @@
       <div id="sunsetNote"></div>
       <div id="timeWarning" class="status-line hidden"></div>
       <div id="selectionCount">1 location selected</div>
-      <button class="big-btn" id="scheduleBtn" disabled>Pay $195 Session Fee and Schedule My Shoot</button>
-      <button class="big-btn hidden" id="venmoBtn">Step 2: Pay via Venmo</button>
+      <button class="big-btn" id="scheduleBtn" disabled>Step 1: Schedule My Shoot</button>
+      <button class="big-btn secondary" id="venmoBtn" disabled>Step 2: Pay Now with Venmo</button>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">You can pay now or anytime before your shoot.</div>
     </div>
   </div>
 </div>
@@ -181,7 +183,9 @@
   timeInput.addEventListener("input", () => { timeManuallyEdited = true; updateTimeWarning(); });
 
   function updateScheduleBtn() {
-    scheduleBtn.disabled = !(clientName.value.trim() && clientPhone.value.trim() && dateInput.value);
+    const ready = clientName.value.trim() && clientPhone.value.trim() && dateInput.value;
+    scheduleBtn.disabled = !ready;
+    venmoBtn.disabled = !ready;
   }
   clientName.addEventListener("input", updateScheduleBtn);
   clientPhone.addEventListener("input", updateScheduleBtn);
@@ -189,11 +193,6 @@
     return /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
   scheduleBtn.addEventListener("click", () => {
-    venmoBtn.classList.remove("hidden");
-    scheduleBtn.disabled = true;
-    scheduleBtn.textContent = isMobileDevice()
-      ? "Booking details sent — complete payment below"
-      : "Booking email opened — complete payment below";
     const body = "New shoot booked (session fee paid):\nName: " + clientName.value.trim() +
       "\nPhone: " + clientPhone.value.trim() +
       "\nDate: " + dateInput.value +

@@ -130,6 +130,7 @@ function updateSelectionUi() {
     clientPhoneInput.value.trim() &&
     dateInput.value;
   scheduleBtn.disabled = !ready;
+  venmoBtn.disabled = !ready;
 }
 
 let timeManuallyEdited = false;
@@ -321,11 +322,6 @@ function buildVenmoLink() {
 scheduleBtn.textContent = `Pay ${SESSION_FEE_LABEL} Session Fee and Schedule My Shoot`;
 
 scheduleBtn.addEventListener("click", () => {
-  venmoBtn.classList.remove("hidden");
-  scheduleBtn.disabled = true;
-  scheduleBtn.textContent = isMobileDevice()
-    ? "Booking details sent — complete payment below"
-    : "Booking email opened — complete payment below";
   window.location.href = isMobileDevice() ? buildSmsLink() : buildMailtoLink();
 });
 
