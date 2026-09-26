@@ -20,7 +20,7 @@ export const SCHEDULE_REQUEST_PHONE = "+15555555555";
 // Your Venmo username (no @), e.g. the "Matt-McGurk-1" in venmo.com/u/Matt-McGurk-1.
 // Opens a pre-filled Venmo payment request in a new tab when the client
 // clicks the schedule button -- they still have to hit Pay themselves.
-export const VENMO_USERNAME = "REPLACE_ME";
+export const VENMO_USERNAME = "MattMiko";
 
 // The session fee amount (plain number, no "$") used to pre-fill the Venmo
 // payment, and its display text for the button label.
