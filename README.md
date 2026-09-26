@@ -35,7 +35,11 @@ Firestore `sites` collection and Cloud Storage bucket.
    - `mobile-app/www/shared/firebase-config.js` (copy from
      `firebase-config.example.js` first)
 
-Both files are gitignored so real keys never get committed.
+Both files get committed to git as normal &mdash; Firebase's web config
+(`apiKey`, `authDomain`, etc.) isn't a secret; it has to be publicly visible
+in the deployed page for the app to work at all. The real security boundary
+is the Firestore/Storage rules (`web/firestore.rules`, `web/storage.rules`)
+and the Authentication → Authorized domains list, not hiding this file.
 
 ## 2. Deploy Firestore/Storage security rules
 
