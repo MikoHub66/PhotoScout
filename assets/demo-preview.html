@@ -53,6 +53,19 @@
   .modal-actions { display:flex; gap:8px; margin-top:6px; }
   .modal-actions .big-btn { flex:1; }
   .modal-actions .big-btn.secondary { background:#eef2f6; color:var(--text); border:1px solid var(--border); }
+
+  @media (max-width: 768px) and (orientation: portrait) {
+    #main { flex-direction: column; }
+    #map { flex: 1 1 auto; min-height: 0; }
+    #sidebar { width: 100%; flex: 0 0 50%; max-height: 50%; border-left: none; border-top: 1px solid var(--border); }
+    .logo-big { height: 90px; margin: 8px auto 0; }
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    #main { flex-direction: row; }
+    #sidebar { width: 33.333%; flex: 0 0 33.333%; max-height: none; }
+    .logo-big { height: 64px; margin: 6px auto 0; }
+  }
 </style>
 </head>
 <body>
