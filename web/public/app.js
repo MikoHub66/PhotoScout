@@ -32,6 +32,7 @@ const loadStatus = document.getElementById("loadStatus");
 const siteListEl = document.getElementById("siteList");
 const selectionCountEl = document.getElementById("selectionCount");
 const scheduleBtn = document.getElementById("scheduleBtn");
+const venmoBtn = document.getElementById("venmoBtn");
 const clientNameInput = document.getElementById("clientName");
 const clientPhoneInput = document.getElementById("clientPhone");
 const dateInput = document.getElementById("shootDate");
@@ -320,8 +321,16 @@ function buildVenmoLink() {
 scheduleBtn.textContent = `Pay ${SESSION_FEE_LABEL} Session Fee and Schedule My Shoot`;
 
 scheduleBtn.addEventListener("click", () => {
-  window.open(buildVenmoLink(), "_blank", "noopener");
+  venmoBtn.classList.remove("hidden");
+  scheduleBtn.disabled = true;
+  scheduleBtn.textContent = isMobileDevice()
+    ? "Booking details sent — complete payment below"
+    : "Booking email opened — complete payment below";
   window.location.href = isMobileDevice() ? buildSmsLink() : buildMailtoLink();
+});
+
+venmoBtn.addEventListener("click", () => {
+  window.open(buildVenmoLink(), "_blank", "noopener");
 });
 
 // --- Public "suggest a location" flow ---

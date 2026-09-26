@@ -109,20 +109,25 @@ overwrite an existing one). Redeploy rules after pulling this change:
 
 ## Session fee payment + booking notification
 
-Clicking **"Pay $195 Session Fee and Schedule My Shoot"**:
-1. Opens a pre-filled Venmo payment request (`venmo.com/u/<you>?txn=pay&amount=195&...`)
-   in a new tab so the client can send the session fee. They still confirm
-   and hit Pay themselves inside Venmo &mdash; nothing is charged
-   automatically.
-2. Hands the current tab off to a booking summary (name, phone, requested
-   date/time, selected locations) pre-filled and ready to send &mdash;
-   *where* depends on the device: on a phone, it's an `sms:` link (the
-   texting equivalent of `mailto:`) to `SCHEDULE_REQUEST_PHONE`; on desktop,
-   with no SMS app to hand off to, it's a `mailto:` link to
-   `SCHEDULE_REQUEST_EMAIL` instead (device detected via `navigator.userAgent`
-   in `isMobileDevice()`). Either way they still have to hit send/Pay
-   themselves &mdash; no SMS-sending service or backend is involved, so
-   nothing is sent or charged automatically.
+This is a two-step handoff, not a backend integration &mdash; nothing is sent
+or charged automatically, and no SMS-sending service, email service, or
+payment API is involved. Both steps just open the client's own apps,
+pre-filled, for them to complete:
+
+1. Clicking **"Pay $195 Session Fee and Schedule My Shoot"** hands the tab
+   off to a booking summary (name, phone, requested date/time, selected
+   locations), pre-filled and ready to send. *Where* depends on the device
+   (checked via `navigator.userAgent` in `isMobileDevice()`): on a phone it's
+   an `sms:` link (the texting equivalent of `mailto:`) to
+   `SCHEDULE_REQUEST_PHONE`; on desktop, with no SMS app to hand off to, it's
+   a `mailto:` link to `SCHEDULE_REQUEST_EMAIL` instead. They still have to
+   hit send themselves.
+2. The button then disables itself and a second button appears, **"Step 2:
+   Pay via Venmo"**. Splitting this into its own explicit click (rather than
+   firing both at once) is what makes it reliable &mdash; browsers only
+   reliably allow one handoff per user gesture. Clicking it opens a pre-filled
+   Venmo payment request (`venmo.com/u/<you>?txn=pay&amount=195&...`) in a
+   new tab; they still confirm and hit Pay themselves inside Venmo.
 
 To set it up, in `web/public/shared/firebase-config.js`:
 - `SCHEDULE_REQUEST_PHONE` &mdash; your number in E.164 format (e.g.
@@ -137,8 +142,7 @@ All of these are plain constants, not secrets &mdash; safe to change any
 time, takes effect on the public map immediately (static file, no rebuild).
 Note the Venmo link only does anything useful on a phone (or with Venmo
 installed/logged in) &mdash; on a desktop browser with no Venmo session,
-nothing visible will happen when that half of the click fires, though the
-email/SMS half still will.
+nothing visible will happen when Step 2 is clicked.
 
 ## Data model
 

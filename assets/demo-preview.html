@@ -100,6 +100,7 @@
       <div id="timeWarning" class="status-line hidden"></div>
       <div id="selectionCount">1 location selected</div>
       <button class="big-btn" id="scheduleBtn" disabled>Pay $195 Session Fee and Schedule My Shoot</button>
+      <button class="big-btn hidden" id="venmoBtn">Step 2: Pay via Venmo</button>
     </div>
   </div>
 </div>
@@ -174,6 +175,7 @@
   const clientName = document.getElementById("clientName");
   const clientPhone = document.getElementById("clientPhone");
   const scheduleBtn = document.getElementById("scheduleBtn");
+  const venmoBtn = document.getElementById("venmoBtn");
   const SITE_LAT = 41.6528, SITE_LNG = -83.5379;
   let timeManuallyEdited = false;
   timeInput.addEventListener("input", () => { timeManuallyEdited = true; updateTimeWarning(); });
@@ -187,7 +189,11 @@
     return /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
   scheduleBtn.addEventListener("click", () => {
-    alert("(Demo only) In the real app this opens a Venmo payment request tab for the $195 session fee.");
+    venmoBtn.classList.remove("hidden");
+    scheduleBtn.disabled = true;
+    scheduleBtn.textContent = isMobileDevice()
+      ? "Booking details sent — complete payment below"
+      : "Booking email opened — complete payment below";
     const body = "New shoot booked (session fee paid):\nName: " + clientName.value.trim() +
       "\nPhone: " + clientPhone.value.trim() +
       "\nDate: " + dateInput.value +
@@ -196,6 +202,10 @@
     window.location.href = isMobileDevice()
       ? `sms:+15555555555?body=${encodeURIComponent(body)}`
       : `mailto:mtm102582@gmail.com?subject=${encodeURIComponent("Shoot booked")}&body=${encodeURIComponent(body)}`;
+  });
+
+  venmoBtn.addEventListener("click", () => {
+    alert("(Demo only) In the real app this opens a Venmo payment request tab for the $195 session fee.");
   });
 
   // --- Suggest a location (demo only -- doesn't actually save anywhere) ---
