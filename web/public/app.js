@@ -87,10 +87,15 @@ function escapeHtml(str) {
 function markerIconFor(site) {
   return L.divIcon({
     className: "",
-    html: `<div class="marker-thumb" style="background-image:url('${site.photoUrl}')"></div>`,
-    iconSize: [42, 42],
-    iconAnchor: [21, 21],
-    popupAnchor: [0, -21],
+    html: `
+      <div class="pin-marker">
+        <div class="pin-photo" style="background-image:url('${site.photoUrl}')"></div>
+        <div class="pin-point"></div>
+      </div>
+    `,
+    iconSize: [84, 98],
+    iconAnchor: [42, 98],
+    popupAnchor: [0, -98],
   });
 }
 

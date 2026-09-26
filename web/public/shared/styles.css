@@ -285,6 +285,36 @@ select {
   opacity: 0.85;
 }
 
+/* Public map marker: a pin with a square photo and a pointer tip. */
+.pin-marker {
+  position: relative;
+  width: 84px;
+  height: 98px;
+}
+
+.pin-marker .pin-photo {
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
+  border: 3px solid var(--accent);
+  background-color: #fff;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.pin-marker .pin-point {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 16px solid var(--accent);
+}
+
 #scheduleBar {
   flex: 0 0 auto;
   background: var(--panel);
@@ -393,8 +423,8 @@ textarea {
 }
 
 .leaflet-popup-content img.popup-photo {
-  width: 220px;
-  max-height: 220px;
+  width: 252px;
+  max-height: 252px;
   object-fit: cover;
   border-radius: 6px;
   display: block;

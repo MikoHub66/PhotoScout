@@ -23,7 +23,9 @@
   .site-card .title { font-weight:700; font-size:13px; margin-bottom:2px; }
   .site-card .notes { font-size:11.5px; color:var(--muted); line-height:1.4; }
   .site-card label.pick { display:flex; align-items:center; gap:6px; font-size:11.5px; margin-top:6px; }
-  .marker-thumb { width:46px; height:46px; border-radius:50%; border:3px solid var(--accent); background-size:cover; background-position:center; box-shadow:0 1px 4px rgba(0,0,0,.45); }
+  .pin-marker { position:relative; width:84px; height:98px; }
+  .pin-marker .pin-photo { width:84px; height:84px; border-radius:10px; border:3px solid var(--accent); background-color:#fff; background-size:cover; background-position:center; box-shadow:0 2px 6px rgba(0,0,0,.45); }
+  .pin-marker .pin-point { position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent; border-top:16px solid var(--accent); }
   #scheduleForm { flex:0 0 auto; border-top:1px solid var(--border); padding:12px; display:flex; flex-direction:column; gap:8px; }
   #scheduleForm label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted); }
   #scheduleForm input { width:100%; padding:7px 8px; border:1px solid var(--border); border-radius:5px; font-size:12.5px; }
@@ -36,7 +38,7 @@
   .status-line.err { background:#fdeaea; border:1px solid #f2c4c4; color:#a71d1d; }
   .hidden { display:none !important; }
   .big-btn { padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#fff; font-size:13px; font-weight:600; cursor:pointer; }
-  .leaflet-popup-content img.popup-photo { width:220px; max-height:220px; object-fit:cover; border-radius:6px; display:block; margin-bottom:6px; }
+  .leaflet-popup-content img.popup-photo { width:252px; max-height:252px; object-fit:cover; border-radius:6px; display:block; margin-bottom:6px; }
   .popup-links a { display:block; font-size:12px; color:var(--accent); text-decoration:none; margin-top:2px; }
   #suggestBar { flex:0 0 auto; padding:10px 12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:4px; }
   #suggestBar .big-btn { width:100%; background:#eef2f6; color:var(--text); border:1px solid var(--border); }
@@ -123,10 +125,15 @@
 
   const icon = L.divIcon({
     className: "",
-    html: '<div class="marker-thumb" style="background-image:url(\'icon-mark-1024.png\')"></div>',
-    iconSize: [46, 46],
-    iconAnchor: [23, 23],
-    popupAnchor: [0, -23],
+    html: `
+      <div class="pin-marker">
+        <div class="pin-photo" style="background-image:url('icon-mark-1024.png')"></div>
+        <div class="pin-point"></div>
+      </div>
+    `,
+    iconSize: [84, 98],
+    iconAnchor: [42, 98],
+    popupAnchor: [0, -98],
   });
 
   L.marker([41.6528, -83.5379], { icon })
