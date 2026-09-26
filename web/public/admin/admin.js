@@ -196,6 +196,16 @@ function cardHtmlFor(site) {
         <button class="big-btn save-site">Save</button>
         <button class="big-btn danger delete-site">Delete</button>
       </div>
+      <div class="row">
+        <button class="big-btn secondary edit-location-btn">Edit Location</button>
+      </div>
+      <div class="location-edit-controls hidden">
+        <div class="status-line" style="margin-top:6px;">Drag the pin on the map to reposition it, then Save or Undo.</div>
+        <div class="row">
+          <button class="big-btn save-location-btn">Save Location</button>
+          <button class="big-btn secondary undo-location-btn">Undo</button>
+        </div>
+      </div>
       <div class="save-status" style="font-size:11px;color:var(--muted);margin-top:4px;"></div>
     </div>
   `;
@@ -217,7 +227,87 @@ function renderSidebar() {
 
     card.querySelector(".save-site").addEventListener("click", () => saveSite(card, siteId));
     card.querySelector(".delete-site").addEventListener("click", () => deleteSite(card, siteId));
+
+    const editLocationBtn = card.querySelector(".edit-location-btn");
+    const locationControls = card.querySelector(".location-edit-controls");
+    editLocationBtn.addEventListener("click", () => startEditLocation(siteId, editLocationBtn, locationControls));
+    card.querySelector(".save-location-btn").addEventListener("click", () =>
+      saveEditLocation(siteId, editLocationBtn, locationControls, card.querySelector(".save-status"))
+    );
+    card.querySelector(".undo-location-btn").addEventListener("click", () =>
+      cancelEditLocation(siteId, editLocationBtn, locationControls)
+    );
   });
+}
+
+// --- Drag-to-reposition a pin ---
+// Only one location edit can be active at a time (keeps drag state simple
+// and unambiguous). The marker itself is dragged live; Save writes the
+// marker's current position to Firestore, Undo snaps it back.
+let editingLocationSiteId = null;
+let editingOriginalLatLng = null;
+
+function setOtherEditLocationButtonsDisabled(disabled) {
+  siteEditList.querySelectorAll(".edit-location-btn").forEach((b) => {
+    b.disabled = disabled;
+  });
+}
+
+function startEditLocation(siteId, btn, controls) {
+  if (editingLocationSiteId) return;
+  const marker = markersById.get(siteId);
+  if (!marker) return;
+
+  editingLocationSiteId = siteId;
+  editingOriginalLatLng = marker.getLatLng();
+  marker.dragging.enable();
+  adminMap.panTo(marker.getLatLng());
+
+  btn.classList.add("hidden");
+  controls.classList.remove("hidden");
+  setOtherEditLocationButtonsDisabled(true);
+}
+
+function exitEditLocationUi(btn, controls) {
+  editingLocationSiteId = null;
+  editingOriginalLatLng = null;
+  controls.classList.add("hidden");
+  btn.classList.remove("hidden");
+  setOtherEditLocationButtonsDisabled(false);
+}
+
+async function saveEditLocation(siteId, btn, controls, statusEl) {
+  const marker = markersById.get(siteId);
+  if (!marker) return;
+  const latlng = marker.getLatLng();
+  statusEl.textContent = "Saving location...";
+  try {
+    await updateDoc(doc(db, "sites", siteId), {
+      lat: latlng.lat,
+      lng: latlng.lng,
+      updatedAt: serverTimestamp(),
+    });
+    marker.dragging.disable();
+    exitEditLocationUi(btn, controls);
+    statusEl.textContent = "Location saved.";
+    const site = sites.find((s) => s.id === siteId);
+    if (site) {
+      site.lat = latlng.lat;
+      site.lng = latlng.lng;
+    }
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `Failed: ${err.message}`;
+  }
+}
+
+function cancelEditLocation(siteId, btn, controls) {
+  const marker = markersById.get(siteId);
+  if (marker) {
+    if (editingOriginalLatLng) marker.setLatLng(editingOriginalLatLng);
+    marker.dragging.disable();
+  }
+  exitEditLocationUi(btn, controls);
 }
 
 function wireLinkRemoveButtons(card) {
