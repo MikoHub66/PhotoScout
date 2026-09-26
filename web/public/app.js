@@ -163,7 +163,7 @@ function getSunsetForSelection() {
   return { sunset, chosenCount: chosen.length, y, m, d };
 }
 
-// Suggests a shoot time of 1 hour before sunset.
+// Suggests a shoot time of 2 hours before sunset.
 function updateSuggestedTime() {
   const info = getSunsetForSelection();
   if (!info) {
@@ -171,13 +171,13 @@ function updateSuggestedTime() {
     return;
   }
   const { sunset, chosenCount } = info;
-  const suggested = new Date(sunset.getTime() - 60 * 60 * 1000);
+  const suggested = new Date(sunset.getTime() - 2 * 60 * 60 * 1000);
 
   if (!timeManuallyEdited) {
     timeInput.value = `${pad2(suggested.getHours())}:${pad2(suggested.getMinutes())}`;
   }
 
-  sunsetNoteEl.textContent = `Sunset at the selected location${chosenCount > 1 ? "s (avg.)" : ""} on this day is ~${formatClock(sunset)} — suggested time is 1 hr prior: ${formatClock(suggested)}. Feel free to adjust.`;
+  sunsetNoteEl.textContent = `Sunset at the selected location${chosenCount > 1 ? "s (avg.)" : ""} on this day is ~${formatClock(sunset)} — suggested time is 2 hrs prior: ${formatClock(suggested)}. Feel free to adjust.`;
 }
 
 // Warns if the currently-picked time is cutting it close to (or is after)
@@ -280,7 +280,7 @@ function buildSmsLink() {
     `Name: ${name}`,
     `Phone: ${phone}`,
     `Date: ${date}`,
-    `Time: ${time} (suggested 1 hr before sunset; may be adjusted)`,
+    `Time: ${time} (suggested 2 hrs before sunset; may be adjusted)`,
     "Locations:",
     ...lines,
   ].join("\n");

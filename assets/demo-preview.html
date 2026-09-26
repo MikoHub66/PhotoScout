@@ -260,11 +260,11 @@
   function updateSuggestedTime() {
     const info = getSunset();
     if (!info) { sunsetNote.textContent = ""; return; }
-    const suggested = new Date(info.sunset.getTime() - 60 * 60 * 1000);
+    const suggested = new Date(info.sunset.getTime() - 2 * 60 * 60 * 1000);
     if (!timeManuallyEdited) {
       timeInput.value = `${pad2(suggested.getHours())}:${pad2(suggested.getMinutes())}`;
     }
-    sunsetNote.textContent = `Sunset at this location on this day is ~${fmt(info.sunset)} — suggested time is 1 hr prior: ${fmt(suggested)}. Feel free to adjust.`;
+    sunsetNote.textContent = `Sunset at this location on this day is ~${fmt(info.sunset)} — suggested time is 2 hrs prior: ${fmt(suggested)}. Feel free to adjust.`;
   }
 
   function updateTimeWarning() {
