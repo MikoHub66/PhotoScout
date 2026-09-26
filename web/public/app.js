@@ -35,6 +35,15 @@ const clientNameInput = document.getElementById("clientName");
 const clientPhoneInput = document.getElementById("clientPhone");
 const dateInput = document.getElementById("shootDate");
 const timeInput = document.getElementById("shootTime");
+
+// Don't let clients pick a shoot day before today.
+{
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = String(today.getMonth() + 1).padStart(2, "0");
+  const d = String(today.getDate()).padStart(2, "0");
+  dateInput.min = `${y}-${m}-${d}`;
+}
 const sunsetNoteEl = document.getElementById("sunsetNote");
 const timeWarningEl = document.getElementById("timeWarning");
 
@@ -52,10 +61,18 @@ const suggestCancelBtn = document.getElementById("suggestCancelBtn");
 const suggestSubmitBtn = document.getElementById("suggestSubmitBtn");
 
 const map = L.map("map").setView([39.8283, -98.5795], 4); // default: continental US
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+
+const satelliteLayer = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  { maxZoom: 19, attribution: "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics" }
+).addTo(map);
+
+const streetsLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: "&copy; OpenStreetMap contributors",
-}).addTo(map);
+});
+
+L.control.layers({ Satellite: satelliteLayer, Streets: streetsLayer }).addTo(map);
 
 const selected = new Set(); // siteId set
 const markersById = new Map();

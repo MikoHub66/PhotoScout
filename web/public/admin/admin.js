@@ -84,10 +84,18 @@ onAuthStateChanged(auth, (user) => {
 function initMapIfNeeded() {
   if (adminMap) return;
   adminMap = L.map("adminMap").setView([39.8283, -98.5795], 4);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+
+  const satelliteLayer = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 19, attribution: "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics" }
+  ).addTo(adminMap);
+
+  const streetsLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors",
-  }).addTo(adminMap);
+  });
+
+  L.control.layers({ Satellite: satelliteLayer, Streets: streetsLayer }).addTo(adminMap);
 
   adminMap.on("click", (e) => {
     pendingLatLng = e.latlng;

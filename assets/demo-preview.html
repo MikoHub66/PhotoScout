@@ -109,10 +109,17 @@
 <script>
   const map = L.map("map").setView([41.6528, -83.5379], 16);
 
-  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+  const satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
     maxZoom: 19,
     attribution: "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics",
   }).addTo(map);
+
+  const streetsLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors",
+  });
+
+  L.control.layers({ Satellite: satelliteLayer, Streets: streetsLayer }).addTo(map);
 
   const icon = L.divIcon({
     className: "",
@@ -260,6 +267,7 @@
   dateInput.addEventListener("change", () => { updateSuggestedTime(); updateTimeWarning(); updateScheduleBtn(); });
   const today = new Date();
   dateInput.value = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
+  dateInput.min = dateInput.value;
   updateSuggestedTime();
   updateTimeWarning();
   updateScheduleBtn();
