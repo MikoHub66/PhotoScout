@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhotoScout &mdash; Shoot Locations</title>
+<link rel="icon" type="image/png" href="shared/favicon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+<link rel="stylesheet" href="shared/styles.css">
+</head>
+<body>
+<div id="main">
+  <div id="map"></div>
+  <div id="sidebar">
+    <img class="logo-big" src="shared/logo.png" alt="PhotoScout">
+    <div id="loadStatus" class="loadStatusText">Loading locations&hellip;</div>
+
+    <div id="siteListWrap">
+      <div class="status-line" id="sidebarHint">
+        Check the locations you'd like a shot at, then fill in the form below and hit
+        <strong>Schedule My Shoot</strong>.
+      </div>
+      <div id="siteList"></div>
+    </div>
+
+    <div id="suggestBar">
+      <button class="big-btn secondary" id="suggestLocationBtn">+ Suggest a location</button>
+      <div id="suggestHint"></div>
+    </div>
+
+    <div id="scheduleForm">
+      <label>Name <span class="required">*</span> <input type="text" id="clientName" placeholder="Your name" required></label>
+      <label>Phone <span class="required">*</span> <input type="tel" id="clientPhone" placeholder="(555) 555-5555" required></label>
+      <label>Ideal shoot day <input type="date" id="shootDate"></label>
+      <label>Time <input type="time" id="shootTime"></label>
+      <div id="sunsetNote"></div>
+      <div id="timeWarning" class="status-line hidden"></div>
+      <div id="selectionCount">0 locations selected</div>
+      <button class="big-btn" id="scheduleBtn" disabled>Pay Session Fee and Schedule My Shoot</button>
+    </div>
+  </div>
+</div>
+
+<div id="suggestModalOverlay" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Suggest a Location</h3>
+    <div id="suggestStatus" class="status-line hidden"></div>
+    <p class="hint">Pinned at: <strong id="suggestCoords">&mdash;</strong></p>
+    <label>Title <input type="text" id="suggestTitle" placeholder="e.g. Old mill bridge"></label>
+    <label>Why this spot? <textarea id="suggestNotes" placeholder="Tell us what makes it special"></textarea></label>
+    <label>Your name (optional) <input type="text" id="suggestName"></label>
+    <label>Contact info (optional) <input type="text" id="suggestContact" placeholder="email or phone"></label>
+    <label>Photo <input type="file" id="suggestPhoto" accept="image/*"></label>
+    <div class="modal-actions">
+      <button class="big-btn secondary" id="suggestCancelBtn">Cancel</button>
+      <button class="big-btn" id="suggestSubmitBtn" disabled>Submit for review</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

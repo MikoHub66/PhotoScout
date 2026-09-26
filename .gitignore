@@ -1,0 +1,10 @@
+node_modules/
+android/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Real Firebase keys -- copy firebase-config.example.js to firebase-config.js
+# and fill in your project's values. Never commit the real file.
+web/public/shared/firebase-config.js
+mobile-app/www/shared/firebase-config.js

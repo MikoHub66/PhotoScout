@@ -1,0 +1,10 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "bucket": "photoscout-c54e7.firebasestorage.app",
+    "rules": "storage.rules"
+  }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhotoScout Admin</title>
+<link rel="icon" type="image/png" href="../shared/favicon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+  #loginScreen { max-width: 320px; margin: 80px auto; padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; }
+  #loginScreen label { display: block; margin-bottom: 12px; }
+  #loginScreen label span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  #loginScreen input { width: 100%; }
+  #adminApp { display: none; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  #adminMain { flex: 1; display: flex; min-height: 0; }
+  #adminMap { flex: 1 1 auto; }
+  #adminSidebar { width: 420px; flex: 0 0 420px; border-left: 1px solid var(--border); background: var(--panel); overflow-y: auto; padding: 12px; }
+  .admin-card { border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 12px; background: #fafbfc; }
+  .admin-card img.thumb { width: 100%; max-height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; background: var(--border); }
+  .admin-card .row { display: flex; gap: 8px; margin-top: 8px; }
+  .admin-card textarea { width: 100%; min-height: 60px; }
+  .link-row { display: flex; gap: 6px; margin-top: 6px; }
+  .link-row input { flex: 1; }
+  .publish-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  #newSiteForm { border: 2px dashed var(--border); border-radius: 8px; padding: 10px; margin-bottom: 14px; }
+  #newSiteForm input, #newSiteForm textarea { width: 100%; margin-bottom: 6px; }
+  #pendingSection { margin-bottom: 16px; }
+  #pendingSection h3 { font-size: 13px; margin: 0 0 8px; }
+  .pending-card { border: 2px solid var(--warn); border-radius: 8px; padding: 10px; margin-bottom: 12px; background: #fdf9ef; }
+  .pending-card img.thumb { width: 100%; max-height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; }
+  .pending-card .submitter { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+  .pending-card .row { display: flex; gap: 8px; margin-top: 8px; }
+  .pending-card .row .big-btn { flex: 1; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h2 style="margin-top:0;">PhotoScout Admin</h2>
+  <div id="loginStatus" class="status-line hidden"></div>
+  <label><span>Email</span><input type="email" id="loginEmail"></label>
+  <label><span>Password</span><input type="password" id="loginPassword"></label>
+  <button class="big-btn" id="loginBtn" style="width:100%;">Log In</button>
+</div>
+
+<div id="adminApp">
+  <div id="topbar">
+    <img class="logo" src="../shared/logo.png" alt="PhotoScout">
+    <h1>PhotoScout Admin</h1>
+    <span class="grow"></span>
+    <button class="big-btn secondary" id="logoutBtn">Log Out</button>
+  </div>
+  <div id="adminMain">
+    <div id="adminMap"></div>
+    <div id="adminSidebar">
+      <div id="pendingSection">
+        <h3 id="pendingHeading">Pending Suggestions</h3>
+        <div id="pendingList"></div>
+      </div>
+      <div id="newSiteForm">
+        <strong>Add a location</strong>
+        <div class="status-line" style="margin-top:6px;">Click the map to set a pin, then fill this in.</div>
+        <input type="text" id="newTitle" placeholder="Title">
+        <textarea id="newNotes" placeholder="Notes"></textarea>
+        <input type="file" id="newPhoto" accept="image/*">
+        <button class="big-btn" id="addSiteBtn" disabled>Add Location</button>
+        <div id="newSiteStatus" style="font-size:11.5px;color:var(--muted);margin-top:4px;"></div>
+      </div>
+      <div id="siteEditList"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>

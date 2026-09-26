@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhotoScout &mdash; Demo Preview (not the real app)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+<style>
+  :root { --bg:#f4f6f8; --panel:#fff; --border:#d7dde3; --text:#1c2733; --muted:#6b7785; --accent:#1f6feb; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; height:100%; width:100%; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; color:var(--text); background:var(--bg); }
+  body { display:flex; flex-direction:column; }
+  #banner { flex:0 0 auto; font-size:12px; color:#a71d1d; background:#fdeaea; border-bottom:1px solid #f2c4c4; padding:6px 16px; text-align:center; }
+  #main { flex:1; display:flex; min-height:0; }
+  #map { flex:1 1 auto; min-width:0; }
+  #sidebar { width:340px; flex:0 0 340px; border-left:1px solid var(--border); background:var(--panel); display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+  .logo-big { height:180px; width:auto; display:block; margin:14px auto 2px; }
+  #siteListWrap { flex:1 1 auto; overflow-y:auto; min-height:0; padding:8px 12px 12px; }
+  .site-card { display:flex; gap:10px; padding:10px; border:1px solid var(--border); border-radius:8px; background:#fafbfc; }
+  .site-card img.thumb { width:56px; height:56px; border-radius:8px; object-fit:cover; flex:0 0 auto; }
+  .site-card .title { font-weight:700; font-size:13px; margin-bottom:2px; }
+  .site-card .notes { font-size:11.5px; color:var(--muted); line-height:1.4; }
+  .site-card label.pick { display:flex; align-items:center; gap:6px; font-size:11.5px; margin-top:6px; }
+  .marker-thumb { width:46px; height:46px; border-radius:50%; border:3px solid var(--accent); background-size:cover; background-position:center; box-shadow:0 1px 4px rgba(0,0,0,.45); }
+  #scheduleForm { flex:0 0 auto; border-top:1px solid var(--border); padding:12px; display:flex; flex-direction:column; gap:8px; }
+  #scheduleForm label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted); }
+  #scheduleForm input { width:100%; padding:7px 8px; border:1px solid var(--border); border-radius:5px; font-size:12.5px; }
+  #sunsetNote { font-size:11px; color:var(--muted); line-height:1.4; min-height:1.4em; }
+  #selectionCount { font-size:12px; font-weight:600; }
+  #scheduleForm label .required { color:#d33; }
+  .big-btn:disabled { background:#9db8e0; cursor:not-allowed; }
+  .status-line { font-size:11.5px; padding:9px 10px; border-radius:6px; line-height:1.5; font-weight:600; }
+  .status-line.warn { background:#fdf4e3; border:1px solid #f0d9a0; color:#8a5c00; }
+  .status-line.err { background:#fdeaea; border:1px solid #f2c4c4; color:#a71d1d; }
+  .hidden { display:none !important; }
+  .big-btn { padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#fff; font-size:13px; font-weight:600; cursor:pointer; }
+  .leaflet-popup-content img.popup-photo { width:220px; max-height:220px; object-fit:cover; border-radius:6px; display:block; margin-bottom:6px; }
+  .popup-links a { display:block; font-size:12px; color:var(--accent); text-decoration:none; margin-top:2px; }
+  #suggestBar { flex:0 0 auto; padding:10px 12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:4px; }
+  #suggestBar .big-btn { width:100%; background:#eef2f6; color:var(--text); border:1px solid var(--border); }
+  #suggestHint { font-size:11px; color:var(--accent); min-height:1.3em; }
+  .modal-overlay { display:flex; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; align-items:center; justify-content:center; padding:16px; }
+  .modal-card { background:var(--panel); border-radius:12px; width:100%; max-width:420px; max-height:88vh; overflow-y:auto; padding:18px; }
+  .modal-card h3 { margin:0 0 10px; font-size:15px; }
+  .modal-card .hint { font-size:12px; color:var(--muted); margin:0 0 10px; }
+  .modal-card label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted); margin-bottom:10px; }
+  .modal-card input, .modal-card textarea { width:100%; padding:7px 8px; border:1px solid var(--border); border-radius:5px; font-size:12.5px; }
+  .modal-card textarea { min-height:60px; }
+  .modal-actions { display:flex; gap:8px; margin-top:6px; }
+  .modal-actions .big-btn { flex:1; }
+  .modal-actions .big-btn.secondary { background:#eef2f6; color:var(--text); border:1px solid var(--border); }
+</style>
+</head>
+<body>
+<div id="banner">DEMO PREVIEW &mdash; fake data, Esri satellite basemap, downtown Toledo OH (not the real app)</div>
+<div id="main">
+  <div id="map"></div>
+  <div id="sidebar">
+    <img class="logo-big" src="logo-full.png" alt="PhotoScout">
+
+    <div id="siteListWrap">
+      <div class="site-card">
+        <img class="thumb" src="icon-mark-1024.png" alt="">
+        <div class="body">
+          <div class="title">Toledo Riverwalk &mdash; Promenade Park</div>
+          <div class="notes">Golden hour along the Maumee River, skyline backdrop, great for portraits at sunset.</div>
+          <label class="pick"><input type="checkbox" checked> I want a shot here</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="suggestBar">
+      <button class="big-btn" id="suggestLocationBtn">+ Suggest a location</button>
+      <div id="suggestHint"></div>
+    </div>
+
+    <div id="scheduleForm">
+      <label>Name <span class="required">*</span> <input type="text" id="clientName" placeholder="Your name" required></label>
+      <label>Phone <span class="required">*</span> <input type="tel" id="clientPhone" placeholder="(555) 555-5555" required></label>
+      <label>Ideal shoot day <input type="date" id="shootDate"></label>
+      <label>Time <input type="time" id="shootTime"></label>
+      <div id="sunsetNote"></div>
+      <div id="timeWarning" class="status-line hidden"></div>
+      <div id="selectionCount">1 location selected</div>
+      <button class="big-btn" id="scheduleBtn" disabled>Pay $195 Session Fee and Schedule My Shoot</button>
+    </div>
+  </div>
+</div>
+
+<div id="suggestModalOverlay" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Suggest a Location</h3>
+    <div id="suggestStatus" class="status-line hidden"></div>
+    <p class="hint">Pinned at: <strong id="suggestCoords">&mdash;</strong></p>
+    <label>Title <input type="text" id="suggestTitle" placeholder="e.g. Old mill bridge"></label>
+    <label>Why this spot? <textarea id="suggestNotes" placeholder="Tell us what makes it special"></textarea></label>
+    <label>Your name (optional) <input type="text" id="suggestName"></label>
+    <label>Contact info (optional) <input type="text" id="suggestContact" placeholder="email or phone"></label>
+    <label>Photo <input type="file" id="suggestPhoto" accept="image/*"></label>
+    <div class="modal-actions">
+      <button class="big-btn secondary" id="suggestCancelBtn">Cancel</button>
+      <button class="big-btn" id="suggestSubmitBtn" disabled>Submit for review</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const map = L.map("map").setView([41.6528, -83.5379], 16);
+
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19,
+    attribution: "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics",
+  }).addTo(map);
+
+  const icon = L.divIcon({
+    className: "",
+    html: '<div class="marker-thumb" style="background-image:url(\'icon-mark-1024.png\')"></div>',
+    iconSize: [46, 46],
+    iconAnchor: [23, 23],
+    popupAnchor: [0, -23],
+  });
+
+  L.marker([41.6528, -83.5379], { icon })
+    .addTo(map)
+    .bindPopup(`
+      <div>
+        <img class="popup-photo" src="icon-mark-1024.png" alt="">
+        <div style="font-weight:700;margin-bottom:4px;">Toledo Riverwalk &mdash; Promenade Park</div>
+        <div style="font-size:12px;color:#555;margin-bottom:6px;">Golden hour along the Maumee River, skyline backdrop, great for portraits at sunset. (Placeholder photo &mdash; this will be your actual scouting photo once you capture one in the app.)</div>
+        <div class="popup-links">
+          <a href="#" onclick="return false;">Pixieset: Example gallery &#8594;</a>
+        </div>
+      </div>
+    `)
+    .openPopup();
+
+  const dateInput = document.getElementById("shootDate");
+  const timeInput = document.getElementById("shootTime");
+  const sunsetNote = document.getElementById("sunsetNote");
+  const timeWarning = document.getElementById("timeWarning");
+  const clientName = document.getElementById("clientName");
+  const clientPhone = document.getElementById("clientPhone");
+  const scheduleBtn = document.getElementById("scheduleBtn");
+  const SITE_LAT = 41.6528, SITE_LNG = -83.5379;
+  let timeManuallyEdited = false;
+  timeInput.addEventListener("input", () => { timeManuallyEdited = true; updateTimeWarning(); });
+
+  function updateScheduleBtn() {
+    scheduleBtn.disabled = !(clientName.value.trim() && clientPhone.value.trim() && dateInput.value);
+  }
+  clientName.addEventListener("input", updateScheduleBtn);
+  clientPhone.addEventListener("input", updateScheduleBtn);
+  scheduleBtn.addEventListener("click", () => {
+    alert("(Demo only) In the real app this opens a Venmo payment request tab for the $195 session fee.");
+    window.location.href = `sms:+15555555555?body=${encodeURIComponent(
+      "New shoot booked (session fee paid):\nName: " + clientName.value.trim() +
+      "\nPhone: " + clientPhone.value.trim() +
+      "\nDate: " + dateInput.value +
+      "\nTime: " + timeInput.value +
+      "\nLocations:\n1. Toledo Riverwalk - https://www.google.com/maps?q=41.6528,-83.5379"
+    )}`;
+  });
+
+  // --- Suggest a location (demo only -- doesn't actually save anywhere) ---
+  const suggestLocationBtn = document.getElementById("suggestLocationBtn");
+  const suggestHint = document.getElementById("suggestHint");
+  const suggestModalOverlay = document.getElementById("suggestModalOverlay");
+  const suggestStatus = document.getElementById("suggestStatus");
+  const suggestCoords = document.getElementById("suggestCoords");
+  const suggestTitle = document.getElementById("suggestTitle");
+  const suggestPhoto = document.getElementById("suggestPhoto");
+  const suggestCancelBtn = document.getElementById("suggestCancelBtn");
+  const suggestSubmitBtn = document.getElementById("suggestSubmitBtn");
+  let pinDropMode = false;
+  let suggestMarker = null;
+
+  suggestLocationBtn.addEventListener("click", () => {
+    pinDropMode = true;
+    suggestHint.textContent = "Click anywhere on the map to drop your pin.";
+    suggestLocationBtn.disabled = true;
+  });
+
+  map.on("click", (e) => {
+    if (!pinDropMode) return;
+    pinDropMode = false;
+    suggestLocationBtn.disabled = false;
+    suggestHint.textContent = "";
+    if (suggestMarker) map.removeLayer(suggestMarker);
+    suggestMarker = L.marker(e.latlng, { opacity: 0.8 }).addTo(map);
+    suggestCoords.textContent = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+    suggestStatus.classList.add("hidden");
+    suggestTitle.value = "";
+    suggestPhoto.value = "";
+    suggestSubmitBtn.disabled = true;
+    suggestModalOverlay.classList.remove("hidden");
+  });
+
+  function closeSuggestModal() {
+    suggestModalOverlay.classList.add("hidden");
+    if (suggestMarker) { map.removeLayer(suggestMarker); suggestMarker = null; }
+  }
+  suggestCancelBtn.addEventListener("click", closeSuggestModal);
+
+  function validateSuggestForm() {
+    suggestSubmitBtn.disabled = !(suggestTitle.value.trim() && suggestPhoto.files[0]);
+  }
+  suggestTitle.addEventListener("input", validateSuggestForm);
+  suggestPhoto.addEventListener("change", validateSuggestForm);
+
+  suggestSubmitBtn.addEventListener("click", () => {
+    suggestStatus.textContent = "(Demo only) Thanks! Your suggestion has been submitted for review.";
+    suggestStatus.classList.remove("hidden");
+    setTimeout(closeSuggestModal, 1400);
+  });
+
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function fmt(dt) { return dt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }
+
+  function getSunset() {
+    if (!dateInput.value) return null;
+    const [y, m, d] = dateInput.value.split("-").map(Number);
+    const noonLocal = new Date(y, m - 1, d, 12);
+    const { sunset } = SunCalc.getTimes(noonLocal, SITE_LAT, SITE_LNG);
+    return { sunset, y, m, d };
+  }
+
+  function updateSuggestedTime() {
+    const info = getSunset();
+    if (!info) { sunsetNote.textContent = ""; return; }
+    const suggested = new Date(info.sunset.getTime() - 60 * 60 * 1000);
+    if (!timeManuallyEdited) {
+      timeInput.value = `${pad2(suggested.getHours())}:${pad2(suggested.getMinutes())}`;
+    }
+    sunsetNote.textContent = `Sunset at this location on this day is ~${fmt(info.sunset)} — suggested time is 1 hr prior: ${fmt(suggested)}. Feel free to adjust.`;
+  }
+
+  function updateTimeWarning() {
+    const info = getSunset();
+    timeWarning.classList.add("hidden");
+    timeWarning.classList.remove("warn", "err");
+    if (!info || !timeInput.value) return;
+
+    const [hh, mm] = timeInput.value.split(":").map(Number);
+    const chosenDt = new Date(info.y, info.m - 1, info.d, hh, mm);
+    const oneHourMs = 60 * 60 * 1000;
+
+    if (chosenDt.getTime() >= info.sunset.getTime()) {
+      timeWarning.textContent = "Warning: this shoot is after dark! Still doable, but sites are restricted and lighting is required.";
+      timeWarning.classList.add("err");
+      timeWarning.classList.remove("hidden");
+    } else if (chosenDt.getTime() > info.sunset.getTime() - oneHourMs) {
+      timeWarning.textContent = "Warning: less than an hour to complete this shoot before dark.";
+      timeWarning.classList.add("warn");
+      timeWarning.classList.remove("hidden");
+    }
+  }
+
+  dateInput.addEventListener("change", () => { updateSuggestedTime(); updateTimeWarning(); updateScheduleBtn(); });
+  const today = new Date();
+  dateInput.value = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
+  updateSuggestedTime();
+  updateTimeWarning();
+  updateScheduleBtn();
+</script>
+</body>
+</html>

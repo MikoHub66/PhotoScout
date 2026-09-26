@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sites/{siteId} {
+      allow read: if true;
+
+      // The trusted admin (you) can create, edit, publish, or delete anything
+      // from the PhotoScout app or the admin site.
+      allow update, delete: if request.auth != null;
+
+      // Public visitors (no login) may only ever create a brand-new
+      // suggestion, and only in its unpublished, pending-review shape --
+      // never edit/delete existing sites, and never publish directly.
+      allow create: if request.auth != null || (
+        request.resource.data.published == false &&
+        request.resource.data.submittedByPublic == true &&
+        request.resource.data.title is string &&
+        request.resource.data.title.size() > 0 &&
+        request.resource.data.lat is number &&
+        request.resource.data.lng is number
+      );
+    }
+  }
+}

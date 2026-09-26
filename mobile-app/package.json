@@ -1,0 +1,25 @@
+{
+  "name": "photoscout-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PhotoScout Android app (Capacitor wrapper around www/)",
+  "scripts": {
+    "sync": "cap sync",
+    "open:android": "cap open android",
+    "build:debug": "cd android && gradlew.bat assembleDebug",
+    "build:release": "cd android && gradlew.bat assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/camera": "^6.0.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.1",
+    "@capacitor/geolocation": "^6.0.1",
+    "@capacitor/network": "^6.0.2",
+    "@capacitor/preferences": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2"
+  }
+}
