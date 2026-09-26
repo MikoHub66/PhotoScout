@@ -1,9 +1,7 @@
 // Copy this file to firebase-config.js (same folder) and fill in the values
 // from Firebase Console -> Project settings -> General -> Your apps -> Web app
-// -> SDK setup and configuration -> Config.
-//
-// firebase-config.js is gitignored on purpose -- these are project-specific
-// values, not something to keep committed to source control by default.
+// -> SDK setup and configuration -> Config. Not a secret -- gets committed
+// as-is, see README's "Session fee payment" section for why.
 
 export const firebaseConfig = {
   apiKey: "PASTE_ME",
@@ -14,11 +12,12 @@ export const firebaseConfig = {
   appId: "PASTE_ME",
 };
 
-// The phone number that "Pay & Schedule My Shoot" texts the shoot request
-// to, in E.164 format (+1 followed by the 10-digit US number, no spaces or
-// dashes). Safe to change any time -- takes effect immediately, no rebuild
-// needed for the web map.
+// Where "Pay & Schedule My Shoot" sends the booking summary. On a phone it
+// texts SCHEDULE_REQUEST_PHONE (E.164 format); on desktop, with no SMS app
+// to hand off to, it emails SCHEDULE_REQUEST_EMAIL instead. Both are plain
+// constants -- safe to change any time, no rebuild needed for the web map.
 export const SCHEDULE_REQUEST_PHONE = "+15555555555";
+export const SCHEDULE_REQUEST_EMAIL = "you@example.com";
 
 // Your Venmo username (no @), e.g. the "Matt-McGurk-1" in venmo.com/u/Matt-McGurk-1.
 // Opens a pre-filled Venmo payment request in a new tab when the client

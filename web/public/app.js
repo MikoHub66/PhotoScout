@@ -18,6 +18,7 @@ import {
 import {
   firebaseConfig,
   SCHEDULE_REQUEST_PHONE,
+  SCHEDULE_REQUEST_EMAIL,
   VENMO_USERNAME,
   SESSION_FEE_AMOUNT,
   SESSION_FEE_LABEL,
@@ -263,7 +264,7 @@ function renderMarkers() {
   }
 }
 
-function buildSmsLink() {
+function bookingSummaryBody() {
   const name = clientNameInput.value.trim();
   const phone = clientPhoneInput.value.trim();
   const date = dateInput.value || "(date not specified)";
@@ -275,7 +276,7 @@ function buildSmsLink() {
     return `${i + 1}. ${s.title} - ${mapsUrl}`;
   });
 
-  const body = [
+  return [
     `New shoot booked (session fee paid):`,
     `Name: ${name}`,
     `Phone: ${phone}`,
@@ -284,8 +285,23 @@ function buildSmsLink() {
     "Locations:",
     ...lines,
   ].join("\n");
+}
 
-  return `sms:${SCHEDULE_REQUEST_PHONE}?body=${encodeURIComponent(body)}`;
+// Mobile: hand off to the client's own Messages app, pre-filled.
+function buildSmsLink() {
+  return `sms:${SCHEDULE_REQUEST_PHONE}?body=${encodeURIComponent(bookingSummaryBody())}`;
+}
+
+// Desktop (no SMS app to hand off to): hand off to their email client instead.
+function buildMailtoLink() {
+  const chosen = sites.filter((s) => selected.has(s.id));
+  const subject = `Shoot booked: ${chosen.length} location${chosen.length === 1 ? "" : "s"} for ${dateInput.value || "(date not specified)"}`;
+  const params = new URLSearchParams({ subject, body: bookingSummaryBody() });
+  return `mailto:${SCHEDULE_REQUEST_EMAIL}?${params.toString().replace(/\+/g, "%20")}`;
+}
+
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 function buildVenmoLink() {
@@ -305,7 +321,7 @@ scheduleBtn.textContent = `Pay ${SESSION_FEE_LABEL} Session Fee and Schedule My 
 
 scheduleBtn.addEventListener("click", () => {
   window.open(buildVenmoLink(), "_blank", "noopener");
-  window.location.href = buildSmsLink();
+  window.location.href = isMobileDevice() ? buildSmsLink() : buildMailtoLink();
 });
 
 // --- Public "suggest a location" flow ---

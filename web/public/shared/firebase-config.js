@@ -11,11 +11,12 @@ export const firebaseConfig = {
   appId: "1:897168049468:web:40470a15b142c214f40a39",
 };
 
-// The phone number that "Pay & Schedule My Shoot" texts the shoot request
-// to, in E.164 format (+1 followed by the 10-digit US number, no spaces or
-// dashes). Safe to change any time -- takes effect immediately, no rebuild
-// needed for the web map.
+// Where "Pay & Schedule My Shoot" sends the booking summary. On a phone it
+// texts SCHEDULE_REQUEST_PHONE (E.164 format); on desktop, with no SMS app
+// to hand off to, it emails SCHEDULE_REQUEST_EMAIL instead. Both are plain
+// constants -- safe to change any time, no rebuild needed for the web map.
 export const SCHEDULE_REQUEST_PHONE = "+14194108811";
+export const SCHEDULE_REQUEST_EMAIL = "mtm102582@gmail.com";
 
 // Your Venmo username (no @), e.g. the "Matt-McGurk-1" in venmo.com/u/Matt-McGurk-1.
 // Opens a pre-filled Venmo payment request in a new tab when the client

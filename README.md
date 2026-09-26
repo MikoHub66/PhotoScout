@@ -114,15 +114,20 @@ Clicking **"Pay $195 Session Fee and Schedule My Shoot"**:
    in a new tab so the client can send the session fee. They still confirm
    and hit Pay themselves inside Venmo &mdash; nothing is charged
    automatically.
-2. Hands the current tab off to the client's own Messages app (an `sms:`
-   link, the texting equivalent of `mailto:`) pre-filled with their name,
-   phone, requested date/time, and the selected locations, addressed to your
-   number. Again, they still have to hit send themselves &mdash; no
-   SMS-sending service or backend is involved.
+2. Hands the current tab off to a booking summary (name, phone, requested
+   date/time, selected locations) pre-filled and ready to send &mdash;
+   *where* depends on the device: on a phone, it's an `sms:` link (the
+   texting equivalent of `mailto:`) to `SCHEDULE_REQUEST_PHONE`; on desktop,
+   with no SMS app to hand off to, it's a `mailto:` link to
+   `SCHEDULE_REQUEST_EMAIL` instead (device detected via `navigator.userAgent`
+   in `isMobileDevice()`). Either way they still have to hit send/Pay
+   themselves &mdash; no SMS-sending service or backend is involved, so
+   nothing is sent or charged automatically.
 
 To set it up, in `web/public/shared/firebase-config.js`:
 - `SCHEDULE_REQUEST_PHONE` &mdash; your number in E.164 format (e.g.
-  `+15551234567`).
+  `+15551234567`), used on mobile.
+- `SCHEDULE_REQUEST_EMAIL` &mdash; fallback address for desktop visitors.
 - `VENMO_USERNAME` &mdash; your Venmo username with no `@`, exactly as it
   appears in your profile URL (`venmo.com/u/<this part>`).
 - `SESSION_FEE_AMOUNT` / `SESSION_FEE_LABEL` &mdash; the numeric amount used
@@ -130,9 +135,10 @@ To set it up, in `web/public/shared/firebase-config.js`:
 
 All of these are plain constants, not secrets &mdash; safe to change any
 time, takes effect on the public map immediately (static file, no rebuild).
-Note `venmo.com` and `sms:` links only do anything useful on a phone (or with
-Venmo installed/logged in); on a desktop browser with no Venmo session or SMS
-app, nothing visible will happen when that half of the click fires.
+Note the Venmo link only does anything useful on a phone (or with Venmo
+installed/logged in) &mdash; on a desktop browser with no Venmo session,
+nothing visible will happen when that half of the click fires, though the
+email/SMS half still will.
 
 ## Data model
 
