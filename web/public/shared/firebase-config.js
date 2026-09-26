@@ -15,7 +15,7 @@ export const firebaseConfig = {
 // to, in E.164 format (+1 followed by the 10-digit US number, no spaces or
 // dashes). Safe to change any time -- takes effect immediately, no rebuild
 // needed for the web map.
-export const SCHEDULE_REQUEST_PHONE = "+15555555555";
+export const SCHEDULE_REQUEST_PHONE = "+14194108811";
 
 // Your Venmo username (no @), e.g. the "Matt-McGurk-1" in venmo.com/u/Matt-McGurk-1.
 // Opens a pre-filled Venmo payment request in a new tab when the client
