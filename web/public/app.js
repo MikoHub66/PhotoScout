@@ -112,8 +112,8 @@ function popupHtmlFor(site) {
       <div style="font-weight:700;margin-bottom:4px;">${escapeHtml(site.title)}</div>
       ${site.notes ? `<div style="font-size:12px;color:#555;margin-bottom:6px;">${escapeHtml(site.notes)}</div>` : ""}
       ${links ? `<div class="popup-links">${links}</div>` : ""}
-      <a class="big-btn nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lng}" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+      <a href="https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lng}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:10px 16px;border-radius:7px;border:1px solid #d7dde3;background:#ffffff;color:#1c2733;font-size:13px;font-weight:600;text-decoration:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1f6feb" aria-hidden="true"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
         Navigate Now
       </a>
     </div>

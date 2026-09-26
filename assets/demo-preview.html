@@ -40,7 +40,6 @@
   .big-btn { padding:10px 16px; border-radius:7px; border:none; background:var(--accent); color:#fff; font-size:13px; font-weight:600; cursor:pointer; }
   .leaflet-popup-content img.popup-photo { width:252px; max-height:252px; object-fit:cover; border-radius:6px; display:block; margin-bottom:6px; }
   .popup-links a { display:block; font-size:12px; color:var(--accent); text-decoration:none; margin-top:2px; }
-  .leaflet-popup-content a.nav-btn { display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; margin-top:8px; }
   #suggestBar { flex:0 0 auto; padding:10px 12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:4px; }
   #suggestBar .big-btn { width:100%; background:#eef2f6; color:var(--text); border:1px solid var(--border); }
   #suggestHint { font-size:11px; color:var(--accent); min-height:1.3em; }
@@ -160,8 +159,8 @@
         <div class="popup-links">
           <a href="#" onclick="return false;">Pixieset: Example gallery &#8594;</a>
         </div>
-        <a class="big-btn nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=41.6528,-83.5379" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=41.6528,-83.5379" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:10px 16px;border-radius:7px;border:1px solid #d7dde3;background:#ffffff;color:#1c2733;font-size:13px;font-weight:600;text-decoration:none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1f6feb" aria-hidden="true"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
           Navigate Now
         </a>
       </div>

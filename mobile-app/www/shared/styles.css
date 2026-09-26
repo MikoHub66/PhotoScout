@@ -439,14 +439,6 @@ textarea {
   margin-top: 2px;
 }
 
-.leaflet-popup-content a.nav-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-decoration: none;
-  margin-top: 8px;
-}
 
 .hidden {
   display: none !important;
